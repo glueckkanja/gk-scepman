@@ -1,0 +1,123 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Compute.MultiVm",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "orgName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Organization Name",
+                "toolTip": "The name of your organization",
+                "constraints": {
+                    "required": true
+                }
+            }
+        ],
+        "steps": [
+            {
+                "name": "AadAppRegistration",
+                "label": "Azure AD App Registration",
+                "subLabel": {
+                    "preValidation": "Provide properties of the Azure AD App Registrations",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Azure AD App Registration",
+                "bladeSubtitle": "Please configure an app registration in Azure AD before deploying.",
+                "elements": [
+                    {
+                        "name": "Guid",
+                        "label": "Azure AD App Registration GUID",
+                        "type": "Microsoft.Common.TextBox",
+                        "toolTip": "You find the GUID in the overview of your app registration",
+                        "visible": true,
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{36,36}$",
+                            "validationMessage": "The GUID must be 36 characters long."
+                        }
+                    },
+                    {
+                        "name": "Secret",
+                        "label": "Azure AD App Registration Secret",
+                        "type": "Microsoft.Common.TextBox",
+                        "toolTip": "Create a client secret in your Azure AD app registration and paste it here.",
+                        "visible": true,
+                        "constraints": {
+                            "required": true
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "resourceConfig",
+                "label": "Resource configuration",
+                "subLabel": {
+                    "preValidation": "Configuration of the Azure resources which will be deployed",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Resource configuration",
+                "bladeSubtitle": "",
+                "elements": [
+                    {
+                        "name": "keyVault",
+                        "label": "Azure key vault",
+                        "type": "Microsoft.Common.Section",
+                        "visible": true,
+                        "elements": [
+                            {
+                                "name": "keyVaultName",
+                                "label": "Name",
+                                "type": "Microsoft.Common.TextBox",
+                                "toolTip": "Define a name for the key vault.",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z-]{3,24}$",
+                                    "validationMessage": "Vault name must only contain alphanumeric characters and dashes and cannot start with a number. It must be between 3 and 24 characters in length."
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "appService",
+                        "label": "Website",
+                        "type": "Microsoft.Common.Section",
+                        "visible": true,
+                        "elements": [
+                            {
+                                "name": "appServicePlanName",
+                                "label": "App Service Plan name",
+                                "type": "Microsoft.Common.TextBox",
+                                "toolTip": "Define a name for the app service plan",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z-]{1,40}$",
+                                    "validationMessage": "The name can contain only letters, numbers, and hyphens. The name must start with a letter, and it must end with a letter or a number. The account name length must be from 1 to 40 characters."
+                                }
+                            },
+                            {
+                                "name": "appServiceName",
+                                "label": "Website name",
+                                "type": "Microsoft.Common.TextBox",
+                                "toolTip": "Define a name for the website. Please ensure that the name is globally unique.",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z0-9A-Z-]{2,60}$",
+                                    "validationMessage": "The name can contain only letters, numbers, and hyphens. The name must start with a letter, and it must end with a letter or a number. The account name length must be from 2 to 60 characters."
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "OrgName": "[basics('orgName')]",
+            "appRegistrationGuid": "[steps('AadAppRegistration').Guid]",
+            "appRegistrationKey": "[steps('AadAppRegistration').Secret]",
+            "keyVaultName": "[steps('resourceConfig').keyVault.keyVaultName]",
+            "appServicePlanName": "[steps('resourceConfig').appService.appServicePlanName]",
+            "appServiceName": "[steps('resourceConfig').appService.appServiceName]"
+        }
+    }
+}
