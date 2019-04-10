@@ -88,6 +88,19 @@
     "functions": [],
     "resources": [
         {
+            "apiVersion": "2018-02-01",
+            "name": "pid-33112ba2-520e-5901-85f8-5eced85db947", 
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": []
+                }
+            }
+        },
+        {
             "type": "Microsoft.KeyVault/vaults",
             "name": "[parameters('keyVaultName')]",
             "location": "[resourceGroup().location]",
