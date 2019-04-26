@@ -42,6 +42,9 @@ When the app registration is done use this button to deploy SCEPMan to your Azur
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+Instead, you can also <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fglueckkanja%2Fgk-scepman%2Fmaster%2Fazuredeploy-beta.json" target="_blank">Deploy the Beta Channel</a>.
+
+
 ### Create root certificate
 
 * Send a post request to certsrv/mscep/mscep.dll/pkiclient.exe/create-root
