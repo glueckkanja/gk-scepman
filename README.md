@@ -7,32 +7,45 @@ SCEPman shall implement a fully unattended Certificate Authority for Microsoft I
 The intended implementation is a .net core C# based Azure WebApp providing the [SCEP](https://tools.ietf.org/html/draft-gutmann-scep-13) and Intune API, using [Bouncy Castle](https://www.bouncycastle.org) to implement the necessary certificate request handling and [Azure Key Vault](https://docs.microsoft.com/en-us/rest/api/keyvault/) based RootCA and certificate signing. No other component should be involved, neither a database nor any other stateful storage except the Key Vault. That said, the concept will not need any backup procedures.
 
 ## Deployment
-### Register an application in Azure Active directory
+### Register an application in Azure Active Directory
 
-* Go to Azure active directory
-* Click on App registrations
-* Click new application registration
-![](https://user-images.githubusercontent.com/24998910/52491764-d7d7d300-2bed-11e9-8557-d81f6268eb49.jpg)
-* Enter scepman-app as name
-* Select Web app/API in application type
-* In sign-on URL type the URL of the SCEPMan Website deployed in your tenant.  
-* Click create
+#### Add a new app registration in Azure Active Directory
+1. Login to your [Azure Portal](http://portal.azure.com/) with an Admin Account.
+2. Navigate to **Azure Active Directory**
+3. Choose **App registrations**
+4. Click **New registration**
+5. Set supported account types to **Accounts in this organizational directory only**
+![Screenshot](./docs/images/1.png)
+6. Save the **Application (client) ID** somewhere because you will need it for the deployment
+![Screenshot](./docs/images/7.png)
 
-  ![](https://user-images.githubusercontent.com/24998910/52492098-8a0f9a80-2bee-11e9-85d0-056c234a9acc.jpg)
-* Note down **application id** 
+#### Manage authentication
+1. Select the **Authentication** blade
+2. Check **ID tokens** in the **Advaned settings** section
+3. Save your changes
+![Screenshot](./docs/images/2.png)
 
-  ![](https://user-images.githubusercontent.com/24998910/52492194-b9bea280-2bee-11e9-919a-beea90198cdd.jpg)
-* Generate a **key**. Select Keys
+#### Create a client secret
+1. Select the **Certificates & secrets** blade
+2. Add a new client secret with **New client secret**
+3. Define a Description and set expiration to **Never**
+4. Save the generated secret somewhere because you are not able to look it up again
 
-  ![image](https://user-images.githubusercontent.com/24998910/53296751-ddadf500-3838-11e9-9c0c-9c3a4190d920.png)
+#### Set API permissions
+1. Select the **API permissions** blade
+2. Click **Add a permission** to grant required permissions
+![Screenshot](./docs/images/4.png)
+3. Select **Intune** 
+4. Choose **Application permissions** as the permission type
+5. Click **scep_challenge_provider** and confirm with **Add permission**
+6. Click **Add a permission** once again
+7. Select **Microsoft Graph**
+8. Expand **Dirctory** and check **Directory.Read.All** and **Directory.ReadWrite.All** and confirm with **Add permission**
+9. Click **Grant admin consent** and confirm the displayed dialog with **Yes**
+![Screenshot](./docs/images/5.png)
 
-* Provide a description of the key, and a duration for the key. When done, select Save.
-* After saving the key, the value of the key is displayed. Copy this value because you aren't able to retrieve the key later. You provide the key value with the application ID to sign in as the application. Store the key value where your application can retrieve it.
-
-  ![](https://user-images.githubusercontent.com/24998910/52493652-09eb3400-2bf2-11e9-95f4-f02e9528c3da.jpg)
-
-* Set API permissions
-![](https://user-images.githubusercontent.com/1116271/53331414-1e694500-38f1-11e9-90de-ab4137135919.png)
+Your API permissions should be configured like this:
+![Screenshot](./docs/images/6.png)
 
 ### Deploy to Azure
 
@@ -44,6 +57,17 @@ When the app registration is done use this button to deploy SCEPMan to your Azur
 
 Instead, you can also <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fglueckkanja%2Fgk-scepman%2Fmaster%2Fazuredeploy-beta.json" target="_blank">Deploy the Beta Channel</a>.
 
+When clicking the deploy button you will see this form dialog
+![Screenshot](./docs/images/8.png)
+1. Select an existing resource group or create a new one. The SCEPMan resources will be deployed in this resource group.
+2. Set the location according to your location
+3. Insert the GUID of the app registriation which you have created in the steps before
+4. Insert the client secret of this app registration
+5. Define a name for key vault, app service plan and web site
+6. Agree to the terms and conditions by clicking the checkbox
+7. Click **Purchase**
+
+Sometimes it is necessary to restart the app service before SCEPMan runs properly.
 
 ### Create root certificate
 

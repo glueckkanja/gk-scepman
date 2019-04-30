@@ -41,13 +41,6 @@
                 "description": "Specifies whether the key vault is a standard vault or a premium vault."
             }
         },
-        "skuAppService": {
-            "type": "string",
-            "defaultValue": "Standard",
-            "metadata": {
-                "description": "The SKU of App Service Plan, by defaut is standard S1"
-            }
-        },
         "appServicePlanName": {
             "type": "string",
             "maxLength": 40
@@ -146,7 +139,7 @@
             "tags": {},
             "properties": {
                 "name": "[parameters('AppServicePlanName')]",
-                "sku": "[parameters('skuAppService')]",
+                "sku": "Standard",
                 "workerSize": 0,
                 "numberOfWorkers": 1
             }
