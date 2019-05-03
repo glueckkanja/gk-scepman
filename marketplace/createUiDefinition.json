@@ -48,76 +48,13 @@
                         }
                     }
                 ]
-            },
-            {
-                "name": "resourceConfig",
-                "label": "Resource configuration",
-                "subLabel": {
-                    "preValidation": "Configuration of the Azure resources which will be deployed",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "Resource configuration",
-                "bladeSubtitle": "",
-                "elements": [
-                    {
-                        "name": "keyVault",
-                        "label": "Azure key vault",
-                        "type": "Microsoft.Common.Section",
-                        "visible": true,
-                        "elements": [
-                            {
-                                "name": "keyVaultName",
-                                "label": "Name",
-                                "type": "Microsoft.Common.TextBox",
-                                "toolTip": "Define a name for the key vault.",
-                                "constraints": {
-                                    "required": true,
-                                    "regex": "^[a-z0-9A-Z-]{3,24}$",
-                                    "validationMessage": "Vault name must only contain alphanumeric characters and dashes and cannot start with a number. It must be between 3 and 24 characters in length."
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "name": "appService",
-                        "label": "Website",
-                        "type": "Microsoft.Common.Section",
-                        "visible": true,
-                        "elements": [
-                            {
-                                "name": "appServicePlanName",
-                                "label": "App Service Plan name",
-                                "type": "Microsoft.Common.TextBox",
-                                "toolTip": "Define a name for the app service plan",
-                                "constraints": {
-                                    "required": true,
-                                    "regex": "^[a-z0-9A-Z-]{1,40}$",
-                                    "validationMessage": "The name can contain only letters, numbers, and hyphens. The name must start with a letter, and it must end with a letter or a number. The account name length must be from 1 to 40 characters."
-                                }
-                            },
-                            {
-                                "name": "appServiceName",
-                                "label": "Website name",
-                                "type": "Microsoft.Common.TextBox",
-                                "toolTip": "Define a name for the website. Please ensure that the name is globally unique.",
-                                "constraints": {
-                                    "required": true,
-                                    "regex": "^[a-z0-9A-Z-]{2,60}$",
-                                    "validationMessage": "The name can contain only letters, numbers, and hyphens. The name must start with a letter, and it must end with a letter or a number. The account name length must be from 2 to 60 characters."
-                                }
-                            }
-                        ]
-                    }
-                ]
             }
         ],
         "outputs": {
             "OrgName": "[basics('orgName')]",
             "appRegistrationGuid": "[steps('AadAppRegistration').Guid]",
             "appRegistrationKey": "[steps('AadAppRegistration').Secret]",
-            "keyVaultName": "[steps('resourceConfig').keyVault.keyVaultName]",
-            "appServicePlanName": "[steps('resourceConfig').appService.appServicePlanName]",
-            "appServiceName": "[steps('resourceConfig').appService.appServiceName]"
+            "location": "[location()]"
         }
     }
 }

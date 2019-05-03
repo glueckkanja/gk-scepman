@@ -22,24 +22,14 @@
                 "description": "Client Secret of the App Registration"
             }
         },
-        "keyVaultName": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 24,
-            "metadata": {
-                "description": "Specifies the name of the key vault."
-            }
-        },
-        "appServicePlanName": {
-            "type": "string",
-            "maxLength": 40
-        },
-        "appServiceName": {
-            "type": "string",
-            "maxLength": 60
+        "location": {
+            "type": "string"
         }
     },
     "variables": {
+        "AppServicePlanName": "[concat('scepman-sp',uniquestring(resourceGroup().id))]",
+        "AppServiceName": "[concat('scepman-app',uniquestring(resourceGroup().id))]",
+        "keyVaultName": "[concat('scepmanvlt',uniquestring(resourceGroup().id))]",
         "zipArtifactsUrl": "https://github.com/glueckkanja/gk-scepman/raw/master/dist/Artifacts.zip",
         "keys": [
             "Get",
@@ -89,7 +79,7 @@
     "resources": [
         {
             "apiVersion": "2018-02-01",
-            "name": "pid-33112ba2-520e-5901-85f8-5eced85db947", 
+            "name": "pid-33112ba2-520e-5901-85f8-5eced85db947",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -102,13 +92,13 @@
         },
         {
             "type": "Microsoft.KeyVault/vaults",
-            "name": "[parameters('keyVaultName')]",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2016-10-01",
+            "name": "[variables('keyVaultName')]",
+            "location": "[parameters('location')]",
+            "apiVersion": "2018-02-14",
             "tags": {},
             "scale": null,
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('appServiceName'))]"
+                "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
             ],
             "properties": {
                 "tenantId": "[subscription().tenantId]",
@@ -121,7 +111,7 @@
                 },
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(concat('Microsoft.Web/sites/', parameters('appServiceName')), '2016-08-01', 'Full').identity.principalId]",
+                        "objectId": "[reference(concat('Microsoft.Web/sites/', variables('appServiceName')), '2018-02-01', 'Full').identity.principalId]",
                         "tenantId": "[subscription().tenantId]",
                         "permissions": {
                             "keys": "[variables('keys')]",
@@ -133,32 +123,32 @@
             }
         },
         {
-            "name": "[parameters('AppServicePlanName')]",
             "type": "Microsoft.Web/serverfarms",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2014-06-01",
-            "dependsOn": [],
-            "tags": {},
+            "apiVersion": "2018-02-01",
+            "name": "[variables('AppServicePlanName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "Tier": "Standard",
+                "Name": "S1"
+            },
             "properties": {
-                "name": "[parameters('AppServicePlanName')]",
-                "sku": "Standard",
-                "workerSize": 0,
+                "name": "[variables('AppServicePlanName')]",
+                "workerSize": 1,
                 "numberOfWorkers": 1
             }
         },
         {
-            "apiVersion": "2015-08-01",
+            "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/sites",
-            "kind": "app",
-            "name": "[parameters('appServiceName')]",
-            "location": "[resourceGroup().location]",
+            "name": "[variables('appServiceName')]",
+            "location": "[parameters('location')]",
             "identity": {
                 "principalId": "",
                 "tenantId": "",
                 "type": "SystemAssigned"
             },
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('AppServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -179,7 +169,7 @@
                         },
                         {
                             "name": "AppConfig:BaseUrl",
-                            "value": "[concat('https://', parameters('appServiceName'),'.azurewebsites.net/')]"
+                            "value": "[concat('https://', variables('appServiceName'),'.azurewebsites.net/')]"
                         },
                         {
                             "name": "AppConfig:DebugMode",
@@ -187,7 +177,7 @@
                         },
                         {
                             "name": "AppConfig:KeyVaultConfig:KeyVaultURL",
-                            "value": "[concat('https://', parameters('keyVaultName'),'.vault.azure.net/')]"
+                            "value": "[concat('https://', variables('keyVaultName'),'.vault.azure.net/')]"
                         },
                         {
                             "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:CertificateName",
@@ -201,7 +191,7 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('AppServicePlanName'))]"
             ]
         }
     ],
