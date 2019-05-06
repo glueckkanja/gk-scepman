@@ -40,7 +40,7 @@ The intended implementation is a .net core C# based Azure WebApp providing the [
 5. Click **scep_challenge_provider** and confirm with **Add permission**
 6. Click **Add a permission** once again
 7. Select **Microsoft Graph**
-8. Expand **Dirctory** and check **Directory.Read.All** and **Directory.ReadWrite.All** and confirm with **Add permission**
+8. Expand **Dirctory** and check **Directory.Read.All** and confirm with **Add permission**
 9. Click **Grant admin consent** and confirm the displayed dialog with **Yes**
 ![Screenshot](./docs/images/5.png)
 
