@@ -58,7 +58,7 @@
         }
     },
     "variables": {
-        "zipArtifactsUrl": "https://github.com/glueckkanja/gk-scepman/raw/master/dist/Artifacts-beta.zip",
+        "zipArtifactsUrl": "https://github.com/glueckkanja/gk-scepman/raw/master/dist/Artifacts-Beta.zip",
         "keys": [
             "Get",
             "List",
