@@ -30,24 +30,6 @@
                 "description": "Specifies the name of the key vault."
             }
         },
-        "skuKeyVault": {
-            "type": "string",
-            "defaultValue": "standard",
-            "allowedValues": [
-                "standard",
-                "premium"
-            ],
-            "metadata": {
-                "description": "Specifies whether the key vault is a standard vault or a premium vault."
-            }
-        },
-        "skuAppService": {
-            "type": "string",
-            "defaultValue": "Standard",
-            "metadata": {
-                "description": "The SKU of App Service Plan, by defaut is standard S1"
-            }
-        },
         "appServicePlanName": {
             "type": "string",
             "maxLength": 40
@@ -109,7 +91,7 @@
             "type": "Microsoft.KeyVault/vaults",
             "name": "[parameters('keyVaultName')]",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2016-10-01",
+            "apiVersion": "2018-02-14",
             "tags": {},
             "scale": null,
             "dependsOn": [
@@ -121,12 +103,12 @@
                 "enabledForTemplateDeployment": false,
                 "enabledForDiskEncryption": false,
                 "sku": {
-                    "name": "[parameters('skuKeyVault')]",
+                    "name": "standard",
                     "family": "A"
                 },
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(concat('Microsoft.Web/sites/', parameters('appServiceName')), '2016-08-01', 'Full').identity.principalId]",
+                        "objectId": "[reference(concat('Microsoft.Web/sites/', parameters('appServiceName')), '2018-02-01', 'Full').identity.principalId]",
                         "tenantId": "[subscription().tenantId]",
                         "permissions": {
                             "keys": "[variables('keys')]",
@@ -138,23 +120,24 @@
             }
         },
         {
-            "name": "[parameters('AppServicePlanName')]",
             "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[parameters('AppServicePlanName')]",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2014-06-01",
-            "dependsOn": [],
-            "tags": {},
+            "sku": {
+                "Tier": "Standard",
+                "Name": "S1"
+            },
             "properties": {
                 "name": "[parameters('AppServicePlanName')]",
-                "sku": "[parameters('skuAppService')]",
-                "workerSize": 0,
+                "workerSize": 1,
                 "numberOfWorkers": 1
             }
         },
+
         {
-            "apiVersion": "2016-08-01",
+            "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/sites",
-            "kind": "app",
             "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
             "identity": {
@@ -164,17 +147,17 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2016-08-01",
+                    "apiVersion": "2018-02-01",
                     "name": "Microsoft.AspNetCore.AzureAppServices.SiteExtension",
                     "type": "siteextensions",
                     "dependsOn": [
-                    "[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+                        "[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
                     ],
                     "properties": {}
                 }
             ],
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -217,7 +200,7 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]"
             ]
         }
     ],
