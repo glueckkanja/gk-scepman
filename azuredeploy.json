@@ -155,6 +155,17 @@
                 "tenantId": "",
                 "type": "SystemAssigned"
             },
+            "resources": [
+                {
+                    "apiVersion": "2016-08-01",
+                    "name": "Microsoft.AspNetCore.AzureAppServices.SiteExtension",
+                    "type": "siteextensions",
+                    "dependsOn": [
+                    "[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+                    ],
+                    "properties": {}
+                }
+            ],
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
