@@ -5,206 +5,67 @@
         "OrgName": {
             "type": "string",
             "metadata": {
-                "description": "Name of the organization or company name"
+                "description": "Name of company or organization for certificate subject"
             }
         },
         "appRegistrationGuid": {
             "type": "string",
-            "minLength": 36,
-            "maxLength": 36,
             "metadata": {
-                "description": "GUID of the App Registration"
+                "description": "GUID of AAD app registration"
             }
         },
         "appRegistrationKey": {
             "type": "string",
             "metadata": {
-                "description": "Client Secret of the App Registration"
+                "description": "Secret of AAD app registration"
             }
         },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            },
+            "defaultValue": "[uri(deployment().properties.templatelink.uri,'Artifacts.zip')]"
+        },
         "location": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Location where the resources will be deployed"
+            }
         }
     },
     "variables": {
-        "AppServicePlanName": "[concat('scepman-sp',uniquestring(resourceGroup().id))]",
-        "AppServiceName": "[concat('scepman-app',uniquestring(resourceGroup().id))]",
-        "keyVaultName": "[concat('scepmanvlt',uniquestring(resourceGroup().id))]",
-        "zipArtifactsUrl": "https://github.com/glueckkanja/gk-scepman/raw/master/dist/Artifacts.zip",
-        "keys": [
-            "Get",
-            "List",
-            "Update",
-            "Create",
-            "Import",
-            "Delete",
-            "Recover",
-            "Backup",
-            "Restore",
-            "Decrypt",
-            "Encrypt",
-            "UnwrapKey",
-            "WrapKey",
-            "Verify",
-            "Sign"
-        ],
-        "secrets": [
-            "Get",
-            "List",
-            "Set",
-            "Delete",
-            "Recover",
-            "Backup",
-            "Restore"
-        ],
-        "certificates": [
-            "Get",
-            "List",
-            "Update",
-            "Create",
-            "Import",
-            "Delete",
-            "Recover",
-            "Backup",
-            "Restore",
-            "ManageContacts",
-            "ManageIssuers",
-            "GetIssuers",
-            "ListIssuers",
-            "SetIssuers",
-            "DeleteIssuers"
-        ]
+        "nestedTemplateUri": "[uri(deployment().properties.templatelink.uri,'nestedtemplates/scepman.json')]"
     },
-    "functions": [],
     "resources": [
         {
-            "apiVersion": "2018-02-01",
-            "name": "pid-33112ba2-520e-5901-85f8-5eced85db947",
             "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60",
             "properties": {
                 "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "resources": []
-                }
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults",
-            "name": "[variables('keyVaultName')]",
-            "location": "[parameters('location')]",
-            "apiVersion": "2018-02-14",
-            "tags": {},
-            "scale": null,
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
-            ],
-            "properties": {
-                "tenantId": "[subscription().tenantId]",
-                "enabledForDeployment": false,
-                "enabledForTemplateDeployment": false,
-                "enabledForDiskEncryption": false,
-                "sku": {
-                    "name": "standard",
-                    "family": "A"
+                "templateLink": {
+                    "uri": "[variables('nestedTemplateUri')]",
+                    "contentVersion": "1.0.0.0"
                 },
-                "accessPolicies": [
-                    {
-                        "objectId": "[reference(concat('Microsoft.Web/sites/', variables('appServiceName')), '2018-02-01', 'Full').identity.principalId]",
-                        "tenantId": "[subscription().tenantId]",
-                        "permissions": {
-                            "keys": "[variables('keys')]",
-                            "secrets": "[variables('secrets')]",
-                            "certificates": "[variables('certificates')]"
-                        }
+                "parameters": {
+                    "OrgName": {
+                        "value": "[parameters('OrgName')]"
+                    },
+                    "appRegistrationGuid": {
+                        "value": "[parameters('appRegistrationGuid')]"
+                    },
+                    "appRegistrationKey": {
+                        "value": "[parameters('appRegistrationKey')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2018-02-01",
-            "name": "[variables('AppServicePlanName')]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "Tier": "Standard",
-                "Name": "S1"
-            },
-            "properties": {
-                "name": "[variables('AppServicePlanName')]",
-                "workerSize": 1,
-                "numberOfWorkers": 1
-            }
-        },
-        {
-            "apiVersion": "2018-02-01",
-            "type": "Microsoft.Web/sites",
-            "name": "[variables('appServiceName')]",
-            "location": "[parameters('location')]",
-            "identity": {
-                "principalId": "",
-                "tenantId": "",
-                "type": "SystemAssigned"
-            },
-            "resources": [
-                {
-                    "apiVersion": "2018-02-01",
-                    "name": "Microsoft.AspNetCore.AzureAppServices.SiteExtension",
-                    "type": "siteextensions",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', variables('appServiceName'))]"
-                    ],
-                    "properties": {}
                 }
-            ],
-            "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('AppServicePlanName'))]",
-                "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "WEBSITE_RUN_FROM_PACKAGE",
-                            "value": "[variables('zipArtifactsUrl')]"
-                        },
-                        {
-                            "name": "AppConfig:AuthConfig:ApplicationId",
-                            "value": "[parameters('appRegistrationGuid')]"
-                        },
-                        {
-                            "name": "AppConfig:AuthConfig:ApplicationKey",
-                            "value": "[parameters('appRegistrationKey')]"
-                        },
-                        {
-                            "name": "AppConfig:AuthConfig:TenantName",
-                            "value": "[subscription().tenantId]"
-                        },
-                        {
-                            "name": "AppConfig:BaseUrl",
-                            "value": "[concat('https://', variables('appServiceName'),'.azurewebsites.net/')]"
-                        },
-                        {
-                            "name": "AppConfig:DebugMode",
-                            "value": "false"
-                        },
-                        {
-                            "name": "AppConfig:KeyVaultConfig:KeyVaultURL",
-                            "value": "[concat('https://', variables('keyVaultName'),'.vault.azure.net/')]"
-                        },
-                        {
-                            "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:CertificateName",
-                            "value": "SCEPman-Device-Root-CA-V1"
-                        },
-                        {
-                            "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:Subject",
-                            "value": "[concat('CN=SCEPman-Device-Root-CA-V1, ', 'OU=',subscription().tenantId, ', ', 'O=', parameters('OrgName'))]"
-                        }
-                    ]
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('AppServicePlanName'))]"
-            ]
+            }
         }
-    ],
-    "outputs": {}
+    ]
 }
