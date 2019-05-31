@@ -47,13 +47,7 @@
             "Delete",
             "Recover",
             "Backup",
-            "Restore",
-            "Decrypt",
-            "Encrypt",
-            "UnwrapKey",
-            "WrapKey",
-            "Verify",
-            "Sign"
+            "Restore"
         ],
         "secrets": [
             "Get",
@@ -88,7 +82,6 @@
             "name": "[variables('keyVaultName')]",
             "location": "[parameters('location')]",
             "apiVersion": "2018-02-14",
-            "tags": {},
             "scale": null,
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', variables('appServiceName'))]"
@@ -143,6 +136,7 @@
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('AppServicePlanName'))]",
                 "siteConfig": {
+                    "alwaysOn": true,
                     "appSettings": [
                         {
                             "name": "WEBSITE_RUN_FROM_PACKAGE",

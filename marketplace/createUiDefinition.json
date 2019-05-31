@@ -10,7 +10,9 @@
                 "label": "Organization Name",
                 "toolTip": "The name of your organization",
                 "constraints": {
-                    "required": true
+                    "required": true,
+                    "regex": "^[a-zA-Z üÜöÖäÄß]",
+                    "validationMessage": "Please type in the name of your Organization."
                 }
             }
         ],
