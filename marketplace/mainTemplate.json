@@ -34,9 +34,6 @@
             }
         }
     },
-    "variables": {
-        "nestedTemplateUri": "[uri(deployment().properties.templatelink.uri,'nestedtemplates/scepman.json')]"
-    },
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
@@ -45,7 +42,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('nestedTemplateUri')]",
+                    "uri": "[uri(deployment().properties.templatelink.uri,'nestedtemplates/scepman.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

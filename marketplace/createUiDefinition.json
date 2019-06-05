@@ -46,7 +46,9 @@
                         "toolTip": "Create a client secret in your Azure AD app registration and paste it here.",
                         "visible": true,
                         "constraints": {
-                            "required": true
+                            "required": true,
+                            "regex": ".*",
+                            "validationMessage": "Paste the Client Secret of your registered AAD Application."
                         }
                     }
                 ]
