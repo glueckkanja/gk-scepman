@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AppServicePlanName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "appServiceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the key vault"
+            }
+        },
+        "OrgName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "appRegistrationGuid": {
+            "type": "string",
+            "metadata": {
+                "description": "GUID of AAD app registration"
+            }
+        },
+        "appRegistrationKey": {
+            "type": "string",
+            "metadata": {
+                "description": "Secret of AAD app registration"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            },
+            "defaultValue": "[uri(deployment().properties.templatelink.uri,'Artifacts.zip')]"
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location where the resources will be deployed"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-02-01",
+            "type": "Microsoft.Web/sites",
+            "name": "[parameters('appServiceName')]",
+            "location": "[parameters('location')]",
+            "identity": {
+                "principalId": "",
+                "tenantId": "",
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]",
+                "siteConfig": {
+                    "alwaysOn": true,
+                    "appSettings": [
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "[parameters('_artifactsLocation')]"
+                        },
+                        {
+                            "name": "AppConfig:AuthConfig:ApplicationId",
+                            "value": "[parameters('appRegistrationGuid')]"
+                        },
+                        {
+                            "name": "AppConfig:AuthConfig:ApplicationKey",
+                            "value": "[parameters('appRegistrationKey')]"
+                        },
+                        {
+                            "name": "AppConfig:AuthConfig:TenantName",
+                            "value": "[subscription().tenantId]"
+                        },
+                        {
+                            "name": "AppConfig:BaseUrl",
+                            "value": "[concat('https://', parameters('appServiceName'),'.azurewebsites.net/')]"
+                        },
+                        {
+                            "name": "AppConfig:DebugMode",
+                            "value": "false"
+                        },
+                        {
+                            "name": "AppConfig:KeyVaultConfig:KeyVaultURL",
+                            "value": "[reference(concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName')), '2018-02-14', 'Full').properties.vaultUri]"
+                        },
+                        {
+                            "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:CertificateName",
+                            "value": "SCEPman-Device-Root-CA-V1"
+                        },
+                        {
+                            "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:Subject",
+                            "value": "[concat('CN=SCEPman-Device-Root-CA-V1, ', 'OU=',subscription().tenantId, ', ', 'O=', parameters('OrgName'))]"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
