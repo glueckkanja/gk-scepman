@@ -111,7 +111,7 @@
                         "value": "[variables('keyVaultName')]"
                     },
                     "OrgName": {
-                        "value": "[variables('appServiceName')]"
+                        "value": "[parameters('OrgName')]"
                     },
                     "appRegistrationGuid": {
                         "value": "[parameters('appRegistrationGuid')]"

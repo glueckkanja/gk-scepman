@@ -85,10 +85,6 @@
                             "value": "[subscription().tenantId]"
                         },
                         {
-                            "name": "AppConfig:BaseUrl",
-                            "value": "[concat('https://', parameters('appServiceName'),'.azurewebsites.net/')]"
-                        },
-                        {
                             "name": "AppConfig:DebugMode",
                             "value": "false"
                         },
