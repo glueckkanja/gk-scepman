@@ -58,11 +58,6 @@
             "type": "Microsoft.Web/sites",
             "name": "[parameters('appServiceName')]",
             "location": "[parameters('location')]",
-            "identity": {
-                "principalId": "",
-                "tenantId": "",
-                "type": "SystemAssigned"
-            },
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]",
                 "siteConfig": {

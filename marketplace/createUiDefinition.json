@@ -47,7 +47,7 @@
                         "visible": true,
                         "constraints": {
                             "required": true,
-                            "regex": ".*",
+                            "regex": "^[^\\x00-\\x1F\\x80-\\x9F]+$",
                             "validationMessage": "Paste the Client Secret of your registered AAD Application."
                         }
                     }

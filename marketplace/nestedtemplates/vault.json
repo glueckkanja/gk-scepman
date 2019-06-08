@@ -61,7 +61,6 @@
             "name": "[variables('keyVaultName')]",
             "location": "[parameters('location')]",
             "apiVersion": "2018-02-14",
-            "scale": null,
             "properties": {
                 "tenantId": "[subscription().tenantId]",
                 "enabledForDeployment": false,
