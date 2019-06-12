@@ -1,0 +1,132 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "OrgName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "appRegistrationGuid": {
+            "type": "string",
+            "metadata": {
+                "description": "GUID of AAD app registration"
+            }
+        },
+        "appRegistrationKey": {
+            "type": "string",
+            "metadata": {
+                "description": "Secret of AAD app registration"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            },
+            "defaultValue": "[uri(deployment().properties.templatelink.uri,'Artifacts.zip')]"
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location where the resources will be deployed"
+            }
+        }
+    },
+    "variables": {
+        "AppServicePlanName": "[concat('scepman-sp',uniquestring(resourceGroup().id))]",
+        "AppServiceName": "[concat('scepman-app',uniquestring(resourceGroup().id))]",
+        "keyVaultName": "[concat('scepmanvlt',uniquestring(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appSvc",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templatelink.uri,'appSvc.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AppServicePlanName": {
+                        "value": "[variables('AppServicePlanName')]"
+                    },
+                    "appServiceName": {
+                        "value": "[variables('AppServiceName')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-vault",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appSvc')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templatelink.uri,'vault.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServiceName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appConfig",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/deployments/', 'pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appSvc')]",
+                "[concat('Microsoft.Resources/deployments/', 'pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-vault')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templatelink.uri,'appConfig.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AppServicePlanName": {
+                        "value": "[variables('AppServicePlanName')]"
+                    },
+                    "appServiceName": {
+                        "value": "[variables('AppServiceName')]"
+                    },
+                    "keyVaultName": {
+                        "value": "[variables('keyVaultName')]"
+                    },
+                    "OrgName": {
+                        "value": "[parameters('OrgName')]"
+                    },
+                    "appRegistrationGuid": {
+                        "value": "[parameters('appRegistrationGuid')]"
+                    },
+                    "appRegistrationKey": {
+                        "value": "[parameters('appRegistrationKey')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        }
+    ]
+}
