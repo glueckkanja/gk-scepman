@@ -26,7 +26,10 @@
             "Delete",
             "Recover",
             "Backup",
-            "Restore"
+            "Restore",
+            "UnwrapKey",
+            "Verify",
+            "Sign"
         ],
         "secrets": [
             "Get",
