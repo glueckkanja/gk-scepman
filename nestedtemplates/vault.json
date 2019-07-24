@@ -2,6 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "keyVaultName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 24,
+            "metadata": {
+                "description": "Specifies the name of the key vault."
+            }
+        },
         "appServiceName": {
             "type": "string",
             "metadata": {
@@ -10,7 +18,6 @@
         }
     },
     "variables": {
-        "keyVaultName": "[concat('scepmanvlt',uniquestring(resourceGroup().id))]",
         "keys": [
             "Get",
             "List",
@@ -55,7 +62,7 @@
     "resources": [
         {
             "type": "Microsoft.KeyVault/vaults",
-            "name": "[variables('keyVaultName')]",
+            "name": "[parameters('keyVaultName')]",
             "location": "[resourceGroup().location]",
             "apiVersion": "2018-02-14",
             "properties": {

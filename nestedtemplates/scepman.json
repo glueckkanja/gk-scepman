@@ -88,6 +88,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "keyVaultName": {
+                        "value": "[parameters('keyVaultName')]"
+                    },
                     "appServiceName": {
                         "value": "[parameters('AppServiceName')]"
                     }
