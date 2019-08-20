@@ -26,6 +26,13 @@
                 "description": "Name of company or organization for certificate subject"
             }
         },
+        "license": {
+            "type": "string",
+            "defaultValue": "trial",
+            "metadata": {
+                "description": "License Key for SCEPman"
+            }
+        },
         "appRegistrationGuid": {
             "type": "string",
             "metadata": {
@@ -66,6 +73,14 @@
                         {
                             "name": "WEBSITE_RUN_FROM_PACKAGE",
                             "value": "[parameters('_artifactsLocation')]"
+                        },
+                        {
+                            "name": "AppConfig:BaseUrl",
+                            "value": "[parameters('appServiceName')]"
+                        },
+                        {
+                            "name": "AppConfig:LicenseKey",
+                            "value": "[parameters('license')]"
                         },
                         {
                             "name": "AppConfig:AuthConfig:ApplicationId",

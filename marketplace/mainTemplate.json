@@ -8,6 +8,13 @@
                 "description": "Name of company or organization for certificate subject"
             }
         },
+        "license": {
+            "type": "string",
+            "defaultValue": "trial",
+            "metadata": {
+                "description": "License Key for SCEPman"
+            }
+        },
         "appRegistrationGuid": {
             "type": "string",
             "metadata": {
@@ -48,6 +55,9 @@
                 "parameters": {
                     "OrgName": {
                         "value": "[parameters('OrgName')]"
+                    },
+                    "license": {
+                        "value": "[parameters('license')]"
                     },
                     "appRegistrationGuid": {
                         "value": "[parameters('appRegistrationGuid')]"

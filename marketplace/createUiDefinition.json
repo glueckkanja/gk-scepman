@@ -14,6 +14,17 @@
                     "regex": "^[a-zA-Z üÜöÖäÄß]",
                     "validationMessage": "Please type in the name of your Organization."
                 }
+            },
+            {
+                "name": "license",
+                "type": "Microsoft.Common.TextBox",
+                "label": "License Key",
+                "toolTip": "If you have a license key, you can paste it here. Leave it empty to use the trial version of SCEPman.",
+                "constraints": {
+                    "required": false,
+                    "regex": "^$|(\\{){0,1}[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}(\\}){0,1}",
+                    "validationMessage": "If you have a license key, you can paste it here. Leave it empty to use the trial version of SCEPman."
+                }
             }
         ],
         "steps": [
@@ -56,6 +67,7 @@
         ],
         "outputs": {
             "OrgName": "[basics('orgName')]",
+            "license": "[basics('license')]",
             "appRegistrationGuid": "[steps('AadAppRegistration').Guid]",
             "appRegistrationKey": "[steps('AadAppRegistration').Secret]",
             "location": "[location()]"
