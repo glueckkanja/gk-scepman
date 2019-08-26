@@ -19,13 +19,23 @@
                 "name": "license",
                 "type": "Microsoft.Common.TextBox",
                 "label": "License Key",
-                "toolTip": "If you have a license key, you can paste it here. Leave it empty to use the trial version of SCEPman.",
+                "toolTip": "If you have a license key, you can paste it here. Leave it empty to use the free community edition of SCEPman.",
                 "constraints": {
                     "required": false,
                     "regex": "^$|(\\{){0,1}[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}(\\}){0,1}",
-                    "validationMessage": "If you have a license key, you can paste it here. Leave it empty to use the trial version of SCEPman."
+                    "validationMessage": "If you have a license key, you can paste it here. Leave it empty to use the free Community Edition of SCEPman."
                 }
-            }
+            },
+            {
+                "name": "licenseInfo",
+                "type": "Microsoft.Common.InfoBox",
+                "visible": true,
+                "options": {
+                  "icon": "Info",
+                  "text": "The free Community Edition of SCEPman offers all features except redundancy support through Azure Traffic Manager. You can use SCEPman without a license for testing and non-critical business process or content needs. Further information is available by following this link.",
+                  "uri": "https://scepman.com/pricing/"
+                }
+              }
         ],
         "steps": [
             {
