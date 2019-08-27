@@ -95,10 +95,6 @@
                             "value": "[subscription().tenantId]"
                         },
                         {
-                            "name": "AppConfig:DebugMode",
-                            "value": "false"
-                        },
-                        {
                             "name": "AppConfig:KeyVaultConfig:KeyVaultURL",
                             "value": "[reference(resourceid('Microsoft.KeyVault/vaults/', parameters('keyVaultName')), '2018-02-14', 'Full').properties.vaultUri]"
                         },
