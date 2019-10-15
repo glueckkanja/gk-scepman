@@ -67,6 +67,7 @@
             "location": "[parameters('location')]",
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]",
+                "httpsOnly": false,
                 "siteConfig": {
                     "alwaysOn": true,
                     "appSettings": [
