@@ -1,6 +1,6 @@
 # SCEPMan
 ## Abstract
-SCEPman shall implement a fully unattended Certificate Authority for Microsoft Intune based device certificate deployment described in [this](https://docs.microsoft.com/en-us/intune/scep-libraries-apis) document:
+SCEPman shall implement a fully unattended Certificate Authority for Microsoft Intune based certificate deployment described in [this](https://docs.microsoft.com/en-us/intune/scep-libraries-apis) document:
 
 “In Microsoft Intune, you can add third-party certificate authorities (CA), and have these CAs issue and validate certificates using the Simple Certificate Enrollment Protocol (SCEP). [Add third-party certification authority](https://docs.microsoft.com/en-us/intune/certificate-authority-add-scep-overview) provides an overview of this feature, and describes the Administrator tasks in Intune.”
 
