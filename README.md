@@ -36,8 +36,9 @@ Please see https://glueckkanja.gitbook.io/scepman/ for full documentation.
 5. Click **scep_challenge_provider** and confirm with **Add permission**
 6. Click **Add a permission** once again
 7. Select **Microsoft Graph**
-8. Expand **Dirctory** and check **Directory.Read.All** and confirm with **Add permission**
-9. Click **Grant admin consent** and confirm the displayed dialog with **Yes**
+8. Choose **Application permissions** as the permission type again
+9. Expand **Directory** and check **Directory.Read.All** and confirm with **Add permission**
+10. Click **Grant admin consent** and confirm the displayed dialog with **Yes**
 ![Screenshot](./docs/images/5.png)
 
 Your API permissions should be configured like this:
