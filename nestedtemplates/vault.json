@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "keyVaultName": {
@@ -64,7 +64,7 @@
             "type": "Microsoft.KeyVault/vaults",
             "name": "[parameters('keyVaultName')]",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2018-02-14",
+            "apiVersion": "2019-09-01",
             "properties": {
                 "tenantId": "[subscription().tenantId]",
                 "enabledForDeployment": false,
