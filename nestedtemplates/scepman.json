@@ -57,7 +57,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appSvc",
+            "name": "[concat('scepman-deploy-appsvc',uniquestring(resourceGroup().id))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -77,7 +77,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-vault",
+            "name": "[concat('scepman-deploy-vault',uniquestring(resourceGroup().id))]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appSvc')]"
             ],
@@ -100,7 +100,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appConfig",
+            "name": "[concat('scepman-deploy-appconfig',uniquestring(resourceGroup().id))]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments/', 'pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-appSvc')]",
                 "[concat('Microsoft.Resources/deployments/', 'pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60-vault')]"
