@@ -55,7 +55,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templatelink.uri,'nestedtemplates/scepman.json')]",
+                    "uri": "https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/nestedtemplates/scepman.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
