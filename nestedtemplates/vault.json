@@ -76,7 +76,7 @@
                 },
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(resourceId('Microsoft.Web/sites/', parameters('appServiceName')), '2018-02-01', 'Full').identity.principalId]",
+                        "objectId": "[reference(resourceId('Microsoft.Web/sites/', parameters('appServiceName')), '2019-08-01', 'Full').identity.principalId]",
                         "tenantId": "[subscription().tenantId]",
                         "permissions": {
                             "keys": "[variables('keys')]",

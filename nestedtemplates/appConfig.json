@@ -99,7 +99,7 @@
                         },
                         {
                             "name": "AppConfig:KeyVaultConfig:KeyVaultURL",
-                            "value": "[reference(resourceid('Microsoft.KeyVault/vaults/', parameters('keyVaultName')), '2018-02-14', 'Full').properties.vaultUri]"
+                            "value": "[reference(resourceid('Microsoft.KeyVault/vaults/', parameters('keyVaultName')), '2019-09-01', 'Full').properties.vaultUri]"
                         },
                         {
                             "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:CertificateName",

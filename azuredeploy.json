@@ -51,7 +51,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "[concat('pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60',uniquestring(resourceGroup().id))]",
+            "name": "pid-8f2bd84e-9cfa-50df-a9b8-69861acb9d60",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
