@@ -90,6 +90,10 @@
                             "value": "[subscription().tenantId]"
                         },
                         {
+                            "name": "AppConfig:UseRequestedKeyUsages",
+                            "value": "true"
+                        },
+						{
                             "name": "AppConfig:DebugMode",
                             "value": "false"
                         },
