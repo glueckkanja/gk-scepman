@@ -62,8 +62,11 @@
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]",
                 "httpsOnly": false,
+                "clientAffinityEnabled": false,
                 "siteConfig": {
                     "alwaysOn": true,
+                    "use32BitWorkerProcess": false,
+                    "ftpsState": "Disabled",
                     "appSettings": [
                         {
                             "name": "WEBSITE_RUN_FROM_PACKAGE",
