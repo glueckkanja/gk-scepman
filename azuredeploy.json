@@ -45,7 +45,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation":"https://github.com/glueckkanja/gk-scepman/raw/master/dist/Artifacts.zip"
+        "_artifactsLocation":"https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/dist/Artifacts.zip"
     },
     "resources": [
         {
