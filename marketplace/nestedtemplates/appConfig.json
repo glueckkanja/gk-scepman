@@ -45,12 +45,17 @@
                 "description": "Secret of AAD app registration"
             }
         },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+            }
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
                 "description": "The base URI where artifacts required by this template are located including a trailing '/'"
-            },
-            "defaultValue": "[uri(deployment().properties.templatelink.uri,'Artifacts.zip')]"
+            }
         },
         "location": {
             "type": "string",
@@ -58,6 +63,9 @@
                 "description": "Location where the resources will be deployed"
             }
         }
+    },
+        "variables": {
+        "artifacts": "[uri(parameters('_artifactsLocation'), concat('Artifacts.zip', parameters('_artifactsLocationSasToken')))]"
     },
     "resources": [
         {
@@ -76,7 +84,7 @@
                     "appSettings": [
                         {
                             "name": "WEBSITE_RUN_FROM_PACKAGE",
-                            "value": "[parameters('_artifactsLocation')]"
+                            "value": "[variables('artifacts')]"
                         },
                         {
                             "name": "AppConfig:BaseUrl",

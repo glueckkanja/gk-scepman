@@ -27,12 +27,17 @@
                 "description": "Secret of AAD app registration"
             }
         },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+            }
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
                 "description": "The base URI where artifacts required by this template are located including a trailing '/'"
-            },
-            "defaultValue": "[uri(deployment().properties.templatelink.uri,'Artifacts.zip')]"
+            }
         },
         "location": {
             "type": "string",
@@ -42,6 +47,9 @@
         }
     },
     "variables": {
+        "appSvcTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/appSvc.json', parameters('_artifactsLocationSasToken')))]",
+        "vaultTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/vault.json', parameters('_artifactsLocationSasToken')))]",
+        "appConfigTemplateUri": "[uri(parameters('_artifactsLocation'), concat('nestedtemplates/appConfig.json', parameters('_artifactsLocationSasToken')))]",
         "AppServicePlanName": "[concat('scepman-sp',uniquestring(resourceGroup().id))]",
         "AppServiceName": "[concat('scepman-app',uniquestring(resourceGroup().id))]",
         "keyVaultName": "[concat('scepmanvlt',uniquestring(resourceGroup().id))]"
@@ -54,7 +62,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templatelink.uri,'appSvc.json')]",
+                    "uri": "[variables('appSvcTemplateUri')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -80,7 +88,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templatelink.uri,'vault.json')]",
+                    "uri": "[variables('vaultTemplateUri')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -104,13 +112,13 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templatelink.uri,'appConfig.json')]",
+                    "uri": "[variables('appConfigTemplateUri')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "AppServicePlanName": {
                         "value": "[variables('AppServicePlanName')]"
-                    },
+                    }, 
                     "appServiceName": {
                         "value": "[variables('AppServiceName')]"
                     },
@@ -128,6 +136,9 @@
                     },
                     "appRegistrationKey": {
                         "value": "[parameters('appRegistrationKey')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
