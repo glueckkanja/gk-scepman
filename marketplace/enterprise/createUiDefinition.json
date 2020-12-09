@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Compute.MultiVm",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "orgName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Organization Name",
+                "toolTip": "The name of your organization",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[a-zA-Z üÜöÖäÄß]",
+                    "validationMessage": "Please type in the name of your Organization."
+                }
+            },
+            {
+                "name": "license",
+                "type": "Microsoft.Common.TextBox",
+                "label": "License Key",
+                "toolTip": "If you have a license key, you can paste it here. Leave it empty to use the free community edition of SCEPman.",
+                "constraints": {
+                    "required": false,
+                    "regex": "^$|(\\{){0,1}[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}(\\}){0,1}",
+                    "validationMessage": "If you have a license key, you can paste it here. Leave it empty to use the free Community Edition of SCEPman."
+                }
+            },
+            {
+                "name": "licenseInfo",
+                "type": "Microsoft.Common.InfoBox",
+                "visible": true,
+                "options": {
+                  "icon": "Info",
+                  "text": "The free Community Edition of SCEPman offers all features except redundancy support through Azure Traffic Manager. You can use SCEPman without a license for testing and non-critical business process or content needs. Further information is available by following this link.",
+                  "uri": "https://scepman.com/pricing/"
+                }
+              }
+        ],
+        "steps": [
+            {
+                "name": "AadAppRegistration",
+                "label": "Azure AD App Registration",
+                "subLabel": {
+                    "preValidation": "Provide properties of the Azure AD App Registrations",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Azure AD App Registration",
+                "bladeSubtitle": "Please configure an app registration in Azure AD before deploying.",
+                "elements": [
+                    {
+                        "name": "Guid",
+                        "label": "Azure AD App Registration GUID",
+                        "type": "Microsoft.Common.TextBox",
+                        "toolTip": "You find the GUID in the overview of your app registration",
+                        "visible": true,
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{36,36}$",
+                            "validationMessage": "The GUID must be 36 characters long."
+                        }
+                    },
+                    {
+                        "name": "Secret",
+                        "label": "Azure AD App Registration Secret",
+                        "type": "Microsoft.Common.TextBox",
+                        "toolTip": "Create a client secret in your Azure AD app registration and paste it here.",
+                        "visible": true,
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[^\\x00-\\x1F\\x80-\\x9F]+$",
+                            "validationMessage": "Paste the Client Secret of your registered AAD Application."
+                        }
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "OrgName": "[basics('orgName')]",
+            "license": "[basics('license')]",
+            "appRegistrationGuid": "[steps('AadAppRegistration').Guid]",
+            "appRegistrationKey": "[steps('AadAppRegistration').Secret]",
+            "location": "[location()]"
+        }
+    }
+}
