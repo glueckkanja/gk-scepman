@@ -45,7 +45,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation":"https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/dist/Artifacts.zip"
+        "_artifactsLocation":"https://raw.githubusercontent.com/scepman/install/master/dist/Artifacts.zip"
     },
     "resources": [
         {
@@ -55,7 +55,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/nestedtemplates/scepman.json",
+                    "uri": "https://raw.githubusercontent.com/scepman/install/master/nestedtemplates/scepman.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

@@ -60,7 +60,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/nestedtemplates/appSvc.json",
+                    "uri": "https://raw.githubusercontent.com/scepman/install/master/nestedtemplates/appSvc.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -83,7 +83,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/nestedtemplates/vault.json",
+                    "uri": "https://raw.githubusercontent.com/scepman/install/master/nestedtemplates/vault.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -107,7 +107,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/glueckkanja/gk-scepman/master/nestedtemplates/appConfig.json",
+                    "uri": "https://raw.githubusercontent.com/scepman/install/master/nestedtemplates/appConfig.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
