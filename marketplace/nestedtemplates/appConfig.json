@@ -1,0 +1,126 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AppServicePlanName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "appServiceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the key vault"
+            }
+        },
+        "OrgName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of company or organization for certificate subject"
+            }
+        },
+        "license": {
+            "type": "string",
+            "defaultValue": "trial",
+            "metadata": {
+                "description": "License Key for SCEPman"
+            }
+        },
+        "appRegistrationGuid": {
+            "type": "string",
+            "metadata": {
+                "description": "GUID of AAD app registration"
+            }
+        },
+        "appRegistrationKey": {
+            "type": "string",
+            "metadata": {
+                "description": "Secret of AAD app registration"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location where the resources will be deployed"
+            }
+        }
+    },
+        "variables": {
+        "artifacts": "[uri(parameters('_artifactsLocation'), concat('Artifacts.zip', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-08-01",
+            "type": "Microsoft.Web/sites",
+            "name": "[parameters('appServiceName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('AppServicePlanName'))]",
+                "httpsOnly": false,
+                "clientAffinityEnabled": false,
+                "siteConfig": {
+                    "alwaysOn": true,
+                    "use32BitWorkerProcess": false,
+                    "ftpsState": "Disabled",
+                    "appSettings": [
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "[variables('artifacts')]"
+                        },
+                        {
+                            "name": "AppConfig:BaseUrl",
+                            "value": "[parameters('appServiceName')]"
+                        },
+                        {
+                            "name": "AppConfig:LicenseKey",
+                            "value": "[parameters('license')]"
+                        },
+                        {
+                            "name": "AppConfig:AuthConfig:ApplicationId",
+                            "value": "[parameters('appRegistrationGuid')]"
+                        },
+                        {
+                            "name": "AppConfig:AuthConfig:ApplicationKey",
+                            "value": "[parameters('appRegistrationKey')]"
+                        },
+                        {
+                            "name": "AppConfig:AuthConfig:TenantName",
+                            "value": "[subscription().tenantId]"
+                        },
+                        {
+                            "name": "AppConfig:KeyVaultConfig:KeyVaultURL",
+                            "value": "[reference(resourceid('Microsoft.KeyVault/vaults/', parameters('keyVaultName')), '2019-09-01', 'Full').properties.vaultUri]"
+                        },
+                        {
+                            "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:CertificateName",
+                            "value": "SCEPman-Device-Root-CA-V1"
+                        },
+                        {
+                            "name": "AppConfig:KeyVaultConfig:RootCertificateConfig:Subject",
+                            "value": "[concat('CN=SCEPman-Device-Root-CA-V1, ', 'OU=',subscription().tenantId, ', ', 'O=\"', parameters('OrgName'), '\"')]"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
